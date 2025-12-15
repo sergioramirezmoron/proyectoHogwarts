@@ -10,6 +10,9 @@ use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Delete;
 use App\Repository\UserRepository;
+use App\State\UserStudentsProvider;
+// Importante: Importamos el Provider que acabamos de crear
+use App\State\UserTeachersProvider;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -20,6 +23,19 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(
     operations: [
+        // --- RUTA NUEVA PERSONALIZADA ---
+        new GetCollection(
+            uriTemplate: '/users/teachers',
+            provider: UserTeachersProvider::class,
+            normalizationContext: ['groups' => ['user:read']]
+        ),
+        // --- RUTA ALUMNOS (NUEVA) ---
+        new GetCollection(
+            uriTemplate: '/users/students',
+            provider: UserStudentsProvider::class,
+            normalizationContext: ['groups' => ['user:read']]
+        ),
+        // --------------------------------
         new Get(),
         new GetCollection(),
         new Post(),
@@ -43,25 +59,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
-    #[Groups(['subject:read', 'user:read', 'enrollment:read', 'user:write'])] // Escribible
+    #[Groups(['subject:read', 'user:read', 'enrollment:read', 'user:write'])]
     private ?string $username = null;
 
     /**
      * @var list<string> The user roles
      */
     #[ORM\Column]
-    #[Groups(['user:read', 'user:write'])] // Escribible
+    #[Groups(['user:read', 'user:write'])]
     private array $roles = [];
 
     /**
      * @var string The hashed password
      */
     #[ORM\Column]
-    #[Groups(['user:write'])] // Solo escritura (nunca lectura).
+    #[Groups(['user:write'])]
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['subject:read', 'user:read', 'enrollment:read', 'user:write'])] // Escribible
+    #[Groups(['subject:read', 'user:read', 'enrollment:read', 'user:write'])]
     private ?string $casa = null;
 
     /**
@@ -130,14 +146,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __serialize(): array
     {
         $data = (array) $this;
-        $data["\0".self::class."\0password"] = hash('crc32c', $this->password);
+        $data["\0" . self::class . "\0password"] = hash('crc32c', $this->password);
         return $data;
     }
 
     #[\Deprecated]
-    public function eraseCredentials(): void
-    {
-    }
+    public function eraseCredentials(): void {}
 
     public function getCasa(): ?string
     {
