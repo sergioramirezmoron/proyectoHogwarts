@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ subject.name }}{% endblock %}
+
+{% block body %}
+<section class="card">
+    <div class="section-title">
+        <div>
+            <p class="muted">Asignatura</p>
+            <h1>{{ subject.name }}</h1>
+        </div>
+        <span class="badge">ID #{{ subject.id }}</span>
+    </div>
+
+    <p class="muted">Calificaciones de todo el alumnado matriculado.</p>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Alumno</th>
+                <th>Nota</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for enrollment in subject.enrollments %}
+            <tr>
+                <td>{{ enrollment.student.username }}</td>
+                <td>{{ enrollment.grade is not null ? enrollment.grade : 'Sin calificar' }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td class="empty" colspan="2">Aún no hay matrículas.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="actions">
+        <a class="btn-secondary" href="{{ path('app_subject_index') }}">Volver</a>
+        <a class="btn-primary" href="{{ path('app_subject_edit', {'id': subject.id}) }}">Editar</a>
+    </div>
+
+    {{ include('subject/_delete_form.html.twig') }}
+</section>
+{% endblock %}

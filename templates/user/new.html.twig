@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nuevo usuario{% endblock %}
+
+{% block body %}
+<section class="card">
+    <div class="section-title">
+        <h1>Crear usuario</h1>
+        <a class="btn-secondary" href="{{ path('app_user_index') }}">Volver</a>
+    </div>
+    {{ include('user/_form.html.twig') }}
+</section>
+{% endblock %}

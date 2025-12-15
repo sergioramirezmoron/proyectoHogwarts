@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block body %}
+<section class="card hero">
+    <div class="section-title">
+        <div>
+            <p class="muted">Bienvenido/a</p>
+            <h1>{{ app.user.username }}</h1>
+            <p class="muted">Casa asignada: {{ app.user.casa }}</p>
+        </div>
+        <div class="crest" aria-hidden="true"></div>
+    </div>
+    <div class="actions">
+        {% if is_granted('ROLE_TEACHER') %}
+            <span class="pill teacher">Profesor</span>
+        {% else %}
+            <span class="pill student">Alumno</span>
+        {% endif %}
+        <span class="house-badge">{{ app.user.casa }}</span>
+    </div>
+</section>
+
+{% if is_granted('ROLE_TEACHER') %}
+    <section class="grid">
+        <article class="card">
+            <div class="section-title">
+                <h2>Asignaturas</h2>
+                <a class="btn-primary" href="{{ path('app_subject_new') }}">Crear asignatura</a>
+            </div>
+            <p class="muted">Gestiona tus materias y matrículas.</p>
+            <div class="divider"></div>
+            <a class="btn-secondary" href="{{ path('app_subject_index') }}">Ver mis asignaturas</a>
+        </article>
+
+        <article class="card">
+            <div class="section-title">
+                <h2>Usuarios</h2>
+                <p class="muted">Asciende a otros magos a profesores.</p>
+            </div>
+            <a class="btn-primary" href="{{ path('app_user_index') }}">Gestionar usuarios</a>
+        </article>
+    </section>
+{% else %}
+    <section class="card">
+        <div class="section-title">
+            <h2>Mis asignaturas</h2>
+            <span class="badge">Total: {{ matriculas|length }}</span>
+        </div>
+        {% if matriculas is defined and matriculas|length > 0 %}
+            <ul class="list">
+                {% for matricula in matriculas %}
+                    <li>
+                        <div>
+                            <strong>{{ matricula.subject.name }}</strong>
+                            <p class="muted">Profesor: {{ matricula.subject.teacher.username }}</p>
+                        </div>
+                        <span class="score">
+                            {{ matricula.grade is not null ? matricula.grade : 'Sin calificar' }}
+                        </span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="empty">No estás matriculado en ninguna asignatura.</p>
+        {% endif %}
+    </section>
+{% endif %}
+{% endblock %}

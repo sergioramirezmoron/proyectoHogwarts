@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Perfil de {{ user.username }}{% endblock %}
+
+{% block body %}
+<section class="card">
+    <div class="section-title">
+        <h1>{{ user.username }}</h1>
+        <span class="house-badge">{{ user.casa }}</span>
+    </div>
+    <p class="muted">Información del usuario</p>
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Rol</th>
+                <td>
+                    {% if "ROLE_TEACHER" in user.roles %}
+                        <span class="pill teacher">Profesor</span>
+                    {% else %}
+                        <span class="pill student">Alumno</span>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Casa</th>
+                <td>{{ user.casa }}</td>
+            </tr>
+            <tr>
+                <th>ID</th>
+                <td>{{ user.id }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a class="btn-secondary" href="{{ path('app_user_index') }}">Volver</a>
+</section>
+{% endblock %}

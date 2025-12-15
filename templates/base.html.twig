@@ -1,17 +1,48 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
-
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
-    </head>
-    <body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Hogwarts{% endblock %}</title>
+    <link rel="icon" href="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f9d9-2640.svg">
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
+    {% endblock %}
+    {% block javascripts %}
+        {% block importmap %}{{ importmap('app') }}{% endblock %}
+    {% endblock %}
+</head>
+<body class="house-theme house-{{ app.user ? app.user.casa|lower : 'muggle' }}">
+    <header class="topbar">
+        <div class="brand">
+            <span class="logo">⚡</span>
+            <div>
+                <p class="title">Hogwarts</p>
+                <small class="subtitle">Gestión de alumnado y asignaturas</small>
+            </div>
+        </div>
+        <nav class="nav-links">
+            {% if app.user %}
+                <a href="{{ path('app_home') }}">Inicio</a>
+                {% if is_granted('ROLE_TEACHER') %}
+                    <a href="{{ path('app_subject_index') }}">Mis asignaturas</a>
+                    <a href="{{ path('app_user_index') }}">Usuarios</a>
+                {% endif %}
+                <span class="house-badge">{{ app.user.casa }}</span>
+                <a class="btn-secondary" href="{{ path('app_logout') }}">Salir</a>
+            {% else %}
+                <a href="{{ path('app_login') }}">Entrar</a>
+                <a class="btn-primary" href="{{ path('app_register') }}">Crear cuenta</a>
+            {% endif %}
+        </nav>
+    </header>
+    <main class="page">
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert {{ label }}">{{ message }}</div>
+            {% endfor %}
+        {% endfor %}
         {% block body %}{% endblock %}
-    </body>
+    </main>
+</body>
 </html>

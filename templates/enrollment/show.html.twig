@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Matrícula #{{ enrollment.id }}{% endblock %}
+
+{% block body %}
+<section class="card">
+    <div class="section-title">
+        <h1>Matrícula</h1>
+        <span class="badge">#{{ enrollment.id }}</span>
+    </div>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Alumno</th>
+                <td>{{ enrollment.student.username }}</td>
+            </tr>
+            <tr>
+                <th>Asignatura</th>
+                <td>{{ enrollment.subject.name }}</td>
+            </tr>
+            <tr>
+                <th>Nota</th>
+                <td>{{ enrollment.grade is not null ? enrollment.grade : 'Sin calificar' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="actions">
+        <a class="btn-secondary" href="{{ path('app_enrollment_index') }}">Volver</a>
+        <a class="btn-primary" href="{{ path('app_enrollment_edit', {'id': enrollment.id}) }}">Editar</a>
+    </div>
+
+    {{ include('enrollment/_delete_form.html.twig') }}
+</section>
+{% endblock %}

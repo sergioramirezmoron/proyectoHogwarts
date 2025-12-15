@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Matrículas{% endblock %}
+
+{% block body %}
+<section class="card">
+    <div class="section-title">
+        <h1>Matrículas</h1>
+        <p class="muted">Gestiona alumnos inscritos y sus notas.</p>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Alumno</th>
+                <th>Asignatura</th>
+                <th>Nota</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for enrollment in enrollments %}
+            <tr>
+                <td>{{ enrollment.id }}</td>
+                <td>{{ enrollment.student.username }}</td>
+                <td>{{ enrollment.subject.name }}</td>
+                <td>{{ enrollment.grade is not null ? enrollment.grade : 'Sin calificar' }}</td>
+                <td class="actions">
+                    <a href="{{ path('app_enrollment_show', {'id': enrollment.id}) }}">Ver</a>
+                    <a href="{{ path('app_enrollment_edit', {'id': enrollment.id}) }}">Editar</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td class="empty" colspan="5">No hay matrículas todavía.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

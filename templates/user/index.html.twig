@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Usuarios{% endblock %}
+
+{% block body %}
+<section class="card">
+    <div class="section-title">
+        <h1>Usuarios</h1>
+    </div>
+    <p class="muted">Solo puedes ascender a otros usuarios a profesores.</p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Usuario</th>
+                <th>Casa</th>
+                <th>Rol</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.username }}</td>
+                <td><span class="house-badge">{{ user.casa }}</span></td>
+                <td>
+                    {% if "ROLE_TEACHER" in user.roles %}
+                        <span class="pill teacher">Profesor</span>
+                    {% else %}
+                        <span class="pill student">Alumno</span>
+                    {% endif %}
+                </td>
+                <td class="actions">
+                    <a href="{{ path('app_user_show', {'id': user.id}) }}">Ver</a>
+                    {% if is_granted("ROLE_TEACHER") or is_granted("ROLE_ADMIN") %}
+                        {% if "ROLE_TEACHER" not in user.roles %}
+                            <form action="{{ path('app_user_make_teacher', {id: user.id}) }}" method="post">
+                                <input type="hidden" name="_token" value="{{ csrf_token('make-teacher' ~ user.id) }}">
+                                <button class="btn-secondary" type="submit">Hacer profesor</button>
+                            </form>
+                        {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td class="empty" colspan="4">No hay usuarios registrados.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

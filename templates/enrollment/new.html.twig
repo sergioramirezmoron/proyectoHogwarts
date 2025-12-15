@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nueva matrícula{% endblock %}
+
+{% block body %}
+<section class="card">
+    <div class="section-title">
+        <h1>Nueva matrícula</h1>
+        <a class="btn-secondary" href="{{ path('app_enrollment_index') }}">Volver</a>
+    </div>
+
+    {{ include('enrollment/_form.html.twig') }}
+</section>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Asignaturas{% endblock %}
+
+{% block body %}
+<section class="card">
+    <div class="section-title">
+        <h1>Mis asignaturas</h1>
+        <a class="btn-primary" href="{{ path('app_subject_new') }}">Crear asignatura</a>
+    </div>
+    <p class="muted">Solo ves las materias de las que eres profesor.</p>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for subject in subjects %}
+            {% if subject in app.user.subjects %}
+                <tr>
+                    <td>{{ subject.id }}</td>
+                    <td>{{ subject.name }}</td>
+                    <td class="actions">
+                        <a href="{{ path('app_subject_show', {'id': subject.id}) }}">Ver calificaciones</a>
+                        <a href="{{ path('app_subject_edit', {'id': subject.id}) }}">Editar</a>
+                        <a class="btn-secondary" href="{{ path('app_enrollment_new', {'id': subject.id}) }}">Matricular alumno</a>
+                    </td>
+                </tr>
+            {% endif %}
+        {% else %}
+            <tr>
+                <td class="empty" colspan="3">No hay asignaturas todavía.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}
